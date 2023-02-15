@@ -11,7 +11,7 @@ import shutil
 
 def get_interventions(lrwid):
     today = datetime.datetime.today().strftime('%m/%d/%Y')
-    url = f"https://api-testing.datax.jisc.ac.uk/intervention/export/{lrwid}?startDate=12%2F01%2F2022&endDate={today}&Id={lrwid}"
+    url = f"https://api-testing.datax.jisc.ac.uk/intervention/export/{lrwid}?startDate=12%2F01%2F2019&endDate={today}&Id={lrwid}"
     username = "service"
     password = "xvu7Qg84uHuwZkAF"
     response = requests.get(url,auth=(username, password))
@@ -39,6 +39,8 @@ for instituion in institutions:
     # print(institution_name)
     # Get the interventions data for the current institution
     df = get_interventions(lwrid)
+    # convert 'Created' column in df to datetime format
+    df['Created'] = pd.to_datetime(df['Created'], format='%m/%d/%Y')
 
     # checking for empty data frame that occurs due to invalid lrwid
     if len(df.columns) < 2:
@@ -50,8 +52,8 @@ for instituion in institutions:
 
     # Create a location for the file based on the institution name
     # AC1: A tsv file saved in a secure place that only a particular institution has access to
-    # location = f"C:/Users/ajit.chandran/Desktop/intervention_test/{institution_name}/reports"
-    location = f"/la-data/{institution_name}/reports"
+    location = f"C:/Users/ajit.chandran/Desktop/intervention_test/{institution_name}/reports"
+    # location = f"/la-data/{institution_name}/reports"
     # if the report path is not exist, create a new one
     if not os.path.exists(location):
         os.makedirs(location)
@@ -63,7 +65,8 @@ for instituion in institutions:
     try:
         # read existing file
         existing_df = pd.read_csv(filename,sep='\t', encoding='utf-8')
-        
+        existing_df['Created'] = pd.to_datetime(existing_df['Created'], format='%Y/%m/%d')
+
          # find the latest date in the existing data
         latest_date = existing_df['Created'].max()
     
