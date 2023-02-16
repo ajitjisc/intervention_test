@@ -52,8 +52,8 @@ for instituion in institutions:
 
     # Create a location for the file based on the institution name
     # AC1: A tsv file saved in a secure place that only a particular institution has access to
-    location = f"C:/Users/ajit.chandran/Desktop/intervention_test/{institution_name}/reports"
-    # location = f"/la-data/{institution_name}/reports"
+    # location = f"C:/Users/ajit.chandran/Desktop/intervention_test/{institution_name}/reports"
+    location = f"/la-data/{institution_name}/reports"
     # if the report path is not exist, create a new one
     if not os.path.exists(location):
         os.makedirs(location)
