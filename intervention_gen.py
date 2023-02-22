@@ -7,7 +7,7 @@ import requests
 import datetime
 import io
 import shutil
-
+import argparse
 
 def get_interventions(lrwid):
     today = datetime.datetime.today().strftime('%m/%d/%Y')
@@ -20,23 +20,61 @@ def get_interventions(lrwid):
         f.write(response.text)
         temp_file_name = f.name
     return pd.read_csv(temp_file_name)
-    
-# A list of dictionaries, each containing information about an institution
-institutions = [
+
+def main():
+
+    # A list of dictionaries, each containing information about an institution
+    institutions = [
         {
             "lrwid": "5fd89228fe8fcf04ac1a5094",
             "institution_name": "cwtest",
+        },
+        {
+            "lrwid": "5fd89229fe8fcf482d698901",
+            "institution_name": "jiscdev",
+        },
+        {
+            "lrwid": "5fd89229fe8fcf04ac1a509b",
+            "institution_name": "shu",
+        },
+        {
+            "lrwid": "60cb5830511310722051d141",
+            "institution_name": "salford",
+        },
+        {
+            "lrwid": "622f6f5569295661a4252972",
+            "institution_name": "bourn",
         }
         
     ]
-# Loop through each institution in the list
-for instituion in institutions:
-     # Extract the LRWID and institution name from the dictionary
-    lwrid= instituion["lrwid"]
-    institution_name = instituion["institution_name"]
+
+    # create argument parser and parse arguments
+    parser = argparse.ArgumentParser(description="Process user input for institution name")
+    parser.add_argument("--ins", help="Enter the institution name")
+    args = parser.parse_args()
+    if not args.ins:
+        print("No institution name provided. Exiting script.")
+        exit()
+
+    # Extract the institution name from the command line arguments
+    institution_name = args.ins
+
+    # Get the institution's LRWID from the list of dictionaries
+    institution = next((inst for inst in institutions if inst["institution_name"] == institution_name), None)
+
+    if institution is None:
+
+        print("Invalid institution name.")
+        return
     
-    # print(lwrid)
-    # print(institution_name)
+    # Extract the LRWID and institution name from the dictionary
+    lwrid= institution["lrwid"]
+
+
+    # check if institution name matches user input, if given
+    if args.ins and institution_name.lower() != args.ins.lower():
+        return
+
     # Get the interventions data for the current institution
     df = get_interventions(lwrid)
     # convert 'Created' column in df to datetime format
@@ -45,8 +83,8 @@ for instituion in institutions:
     # checking for empty data frame that occurs due to invalid lrwid
     if len(df.columns) < 2:
         print('invalid lwrid')
-        continue
-    
+        return
+
     # Create a filename 
     filename = f"{institution_name}_interventions.tsv"
 
@@ -56,20 +94,22 @@ for instituion in institutions:
     location = f"/la-data/{institution_name}/reports"
     # if the report path is not exist, create a new one
     if not os.path.exists(location):
-        os.makedirs(location)
+
+     os.makedirs(location)
 
     # change the directory to the instituion report location
     os.chdir(location)
 
     # AC2: The file has the previous day’s interventions in it
     try:
+
         # read existing file
         existing_df = pd.read_csv(filename,sep='\t', encoding='utf-8')
         existing_df['Created'] = pd.to_datetime(existing_df['Created'], format='%Y/%m/%d')
 
-         # find the latest date in the existing data
+            # find the latest date in the existing data
         latest_date = existing_df['Created'].max()
-    
+
         # filter new data based on the latest date in the existing data
         new_data = df[df['Created'] > latest_date]
 
@@ -85,5 +125,9 @@ for instituion in institutions:
         # if file does not exist, create a new one
         print(f"File was not found, creating new one: {e}")
         df.to_csv(filename,sep="\t", encoding="utf-8", index=False)
-      
-  
+
+
+
+# For local testing
+if __name__ == "__main__":
+    main()
