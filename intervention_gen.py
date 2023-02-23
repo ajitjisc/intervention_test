@@ -30,24 +30,24 @@ def main():
             "institution_name": "cwtest",
         },
         {
+            "lrwid": "5fd89229fe8fcf04ac1a509b",
+            "institution_name": "leedstrinity",
+        },
+        {
             "lrwid": "5fd89229fe8fcf482d698901",
             "institution_name": "jiscdev",
         },
         {
-            "lrwid": "5fd89229fe8fcf04ac1a509b",
+            "lrwid": "********",
             "institution_name": "sheffieldhallam",
         },
         {
-            "lrwid": "60cb5830511310722051d141",
+            "lrwid": "********",
             "institution_name": "salford",
         },
         {
-            "lrwid": "622f6f5569295661a4252972",
+            "lrwid": "********",
             "institution_name": "bournemouth",
-        },
-        {
-            "lrwid": "5fd89229fe8fcf04ac1a509b",
-            "institution_name": "leedstrinity",
         }
         
     ]
