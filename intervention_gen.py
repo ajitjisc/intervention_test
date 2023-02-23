@@ -35,7 +35,7 @@ def main():
         },
         {
             "lrwid": "5fd89229fe8fcf04ac1a509b",
-            "institution_name": "shu",
+            "institution_name": "sheffieldhallam",
         },
         {
             "lrwid": "60cb5830511310722051d141",
@@ -43,7 +43,7 @@ def main():
         },
         {
             "lrwid": "622f6f5569295661a4252972",
-            "institution_name": "bourn",
+            "institution_name": "bournemouth",
         },
         {
             "lrwid": "5fd89229fe8fcf04ac1a509b",
